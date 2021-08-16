@@ -1,0 +1,27 @@
+version: "3"
+services:
+  mongo:
+    image: mongo:4.2.2
+    ports:
+      - 27017:27017
+  etiqa-frontend:
+    build:
+      context: ./etiqa-frontend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 8081
+      REACT_APP_USER_API_BASEURL: http://localhost:3000
+    ports:
+      - 8081:8081
+    tty: true
+  etiqa-backend:
+    build:
+      context: ./etiqa
+      dockerfile: Dockerfile
+    environment:
+      MONGO_DATABASE_URI: mongodb://mongo:27017/etiqa
+      SERVER_PORT: 3000
+      NODE_ENV: development
+      APP_BASE_URL: http://etiqa-backend:3000
+    ports:
+      - 3000:3000
